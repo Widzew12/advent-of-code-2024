@@ -1,9 +1,13 @@
 # x = vertical, y = horizontal
 
 maze_map = []
-checked_indexes_set = set()
+#checked_indexes_set = set()
+not_good_indexes_set = set()
 
-def check_field(curr_index, prev_dir):
+
+def check_field(curr_index, prev_dir, checked_indexes_set):
+    print(number[0])
+    number[0] += 1
     #print(curr_index)
 
     curr_x, curr_y = curr_index
@@ -17,30 +21,43 @@ def check_field(curr_index, prev_dir):
                    (curr_x, curr_y - 1)) # left
     
     checked_fields = []
+    walls_counter = 0
+    not_good_counter = 0
+    good_counter = 0
     for new_index in new_indexes:
         new_x, new_y = new_index
 
-        if new_index in checked_indexes_set:
-            continue
-
-        checked_indexes_set.add(new_index)
-
         if new_x < 0 or new_x >= len(maze_map) or new_y < 0 or new_y >= len(maze_map[new_x]):
             continue
-        
 
         if maze_map[new_x][new_y] == "#":
+            walls_counter += 1
             continue
+        
+        if new_index in not_good_indexes_set:
+            not_good_counter += 1
+            continue
+
+
+        if new_index in checked_indexes_set:
+            continue
+        
+        new_checked_indexes = checked_indexes_set.copy()
+        new_checked_indexes.add(new_index)
+
+        
 
         prev_dir_x, prev_dir_y = prev_dir
         curr_dir_x = new_x - curr_x
         curr_dir_y = new_y - curr_y
         curr_dir = (curr_dir_x, curr_dir_y)
-        checked_field = check_field(new_index, curr_dir)
+        checked_field = check_field(new_index, curr_dir, new_checked_indexes)
 
 
         if checked_field is None:
             continue
+        
+        good_counter += 1
         
         print(new_index, checked_field)
         
@@ -52,6 +69,12 @@ def check_field(curr_index, prev_dir):
             path_len = checked_field + 1001
         
         checked_fields.append(path_len)
+
+    if walls_counter >= 3: 
+        not_good_indexes_set.add(curr_index)
+    
+    if not_good_counter > 0 and good_counter == 0:
+        not_good_indexes_set.add(curr_index)
 
     if len(checked_fields) == 0:
         return None
@@ -72,7 +95,7 @@ if __name__ == "__main__":
             if c_enum[1] == "E":
                 end_index = (line_enum[0], c_enum[0])
     
-    number = check_field(start_index, (0, -1))
+    number = check_field(start_index, (0, 1), set())
 
     print()
     print(number)
