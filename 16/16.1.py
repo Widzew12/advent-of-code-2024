@@ -1,14 +1,33 @@
+import time
+import os
+import sys
+
 # x = vertical, y = horizontal
 
+sys.setrecursionlimit(10000)
+
 maze_map = []
+#new_maze_map = []
 #checked_indexes_set = set()
 not_good_indexes_set = set()
 
+def display_maze_map(maze_map):
+    os.system("clear")
+    print("\n----------------------------------------------------------------------------")
+    for line in maze_map:
+        output_str = ""
+        for e in line:
+            output_str += e
+        print(output_str)
+    print("----------------------------------------------------------------------------\n")
+    #time.sleep(0.05)
 
-def check_field(curr_index, prev_dir, checked_indexes_set):
-    print(number[0])
-    number[0] += 1
+
+
+def check_field(curr_index, prev_dir, checked_indexes_set, new_maze_map):
     #print(curr_index)
+
+    new_new_maze_map = [[e for e in l] for l in new_maze_map]
 
     curr_x, curr_y = curr_index
 
@@ -26,6 +45,7 @@ def check_field(curr_index, prev_dir, checked_indexes_set):
     good_counter = 0
     for new_index in new_indexes:
         new_x, new_y = new_index
+
 
         if new_x < 0 or new_x >= len(maze_map) or new_y < 0 or new_y >= len(maze_map[new_x]):
             continue
@@ -45,13 +65,14 @@ def check_field(curr_index, prev_dir, checked_indexes_set):
         new_checked_indexes = checked_indexes_set.copy()
         new_checked_indexes.add(new_index)
 
+        new_new_maze_map[new_x][new_y] = "O"
         
 
         prev_dir_x, prev_dir_y = prev_dir
         curr_dir_x = new_x - curr_x
         curr_dir_y = new_y - curr_y
         curr_dir = (curr_dir_x, curr_dir_y)
-        checked_field = check_field(new_index, curr_dir, new_checked_indexes)
+        checked_field = check_field(new_index, curr_dir, new_checked_indexes, new_new_maze_map)
 
 
         if checked_field is None:
@@ -79,6 +100,8 @@ def check_field(curr_index, prev_dir, checked_indexes_set):
     if len(checked_fields) == 0:
         return None
 
+    display_maze_map(new_new_maze_map)
+    
     return min(checked_fields)
 
 
@@ -95,7 +118,10 @@ if __name__ == "__main__":
             if c_enum[1] == "E":
                 end_index = (line_enum[0], c_enum[0])
     
-    number = check_field(start_index, (0, 1), set())
+    new_maze_map = [[element for element in line] for line in maze_map]
+    new_new_maze_map = [[element for element in line] for line in maze_map]
+    
+    number = check_field(start_index, (0, 1), set(), new_new_maze_map)
 
     print()
     print(number)
