@@ -12,7 +12,7 @@ maze_map = []
 not_good_indexes_set = set()
 
 def display_maze_map(maze_map):
-    os.system("clear")
+    os.system("cls")
     print("\n----------------------------------------------------------------------------")
     for line in maze_map:
         output_str = ""
@@ -20,14 +20,14 @@ def display_maze_map(maze_map):
             output_str += e
         print(output_str)
     print("----------------------------------------------------------------------------\n")
-    #time.sleep(0.05)
+    time.sleep(0.02)
 
 
 
 def check_field(curr_index, prev_dir, checked_indexes_set, new_maze_map):
     #print(curr_index)
 
-    new_new_maze_map = [[e for e in l] for l in new_maze_map]
+    # new_new_maze_map = [[e for e in l] for l in new_maze_map]
 
     curr_x, curr_y = curr_index
 
@@ -65,14 +65,15 @@ def check_field(curr_index, prev_dir, checked_indexes_set, new_maze_map):
         new_checked_indexes = checked_indexes_set.copy()
         new_checked_indexes.add(new_index)
 
-        new_new_maze_map[new_x][new_y] = "O"
+        #new_new_maze_map[new_x][new_y] = "O"
         
 
         prev_dir_x, prev_dir_y = prev_dir
         curr_dir_x = new_x - curr_x
         curr_dir_y = new_y - curr_y
         curr_dir = (curr_dir_x, curr_dir_y)
-        checked_field = check_field(new_index, curr_dir, new_checked_indexes, new_new_maze_map)
+        #checked_field = check_field(new_index, curr_dir, new_checked_indexes, new_new_maze_map)
+        checked_field = check_field(new_index, curr_dir, new_checked_indexes, [])
 
 
         if checked_field is None:
@@ -100,13 +101,13 @@ def check_field(curr_index, prev_dir, checked_indexes_set, new_maze_map):
     if len(checked_fields) == 0:
         return None
 
-    display_maze_map(new_new_maze_map)
+    #display_maze_map(new_new_maze_map)
     
     return min(checked_fields)
 
 
 if __name__ == "__main__":
-    with open("/home/szymon/Documents/Programowanie/advent_2024/16/16.txt", "r") as input_file:
+    with open("16.txt", "r") as input_file:
         maze_map = [line.strip() for line in input_file.readlines()]
     
     start_index = None
